@@ -53,3 +53,25 @@ func TestBuilderFacets(t *testing.T) {
 		assert.Equal(t, 100000, p.AnnualIncome)
 	})
 }
+
+func TestBuilderParameter(t *testing.T) {
+	t.Run("Should use a builder parameter successfully", func(t *testing.T) {
+		creational.SendEmail(func(b *creational.EmailBuilder) {
+			b.
+				From("fabricio.andreis@gmail.com").
+				To("me@mail.com").
+				Subject("Meeting").
+				Body("Hello, do you want to meet?")
+		})
+	})
+
+	t.Run("Should panic when email is not valid", func(t *testing.T) {
+		assert.Panics(t, func() {
+			creational.SendEmail(func(b *creational.EmailBuilder) {
+				b.
+					From("fabricio.andreisgmail.com").
+					Body("Hello, do you want to meet?")
+			})
+		})
+	})
+}

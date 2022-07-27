@@ -70,6 +70,8 @@ func (b *HtmlBuilder) AddChildFluent(childName, childText string) *HtmlBuilder {
 	return b
 }
 
+// Builder Facets
+// Create more than one builder to different aspects of an object
 type Person struct {
 	// Address
 	StreetAddress, PostCode, City string
@@ -134,4 +136,53 @@ func (b *PersonBuilder) Build() *Person {
 
 type PersonJobBuilder struct {
 	PersonBuilder
+}
+
+// Builder Parameter
+// Using Builder to make sure that and object is created correctly
+// Turn email struct as private and the Builder public
+type email struct {
+	from, to, subject, body string
+}
+
+type EmailBuilder struct {
+	email email
+}
+
+func (b *EmailBuilder) From(from string) *EmailBuilder {
+	if !strings.Contains(from, "@") {
+		panic("from email should contain @")
+	}
+	b.email.from = from
+	return b
+}
+
+func (b *EmailBuilder) To(to string) *EmailBuilder {
+	if !strings.Contains(to, "@") {
+		panic("to email should contain @")
+	}
+	b.email.to = to
+	return b
+}
+
+func (b *EmailBuilder) Subject(subject string) *EmailBuilder {
+	b.email.subject = subject
+	return b
+}
+
+func (b *EmailBuilder) Body(body string) *EmailBuilder {
+	b.email.body = body
+	return b
+}
+
+func sendMailImpl(email *email) {
+	fmt.Printf("Sending email %v\n", email)
+}
+
+type build func(*EmailBuilder)
+
+func SendEmail(action build) {
+	builder := EmailBuilder{}
+	action(&builder)
+	sendMailImpl(&builder.email)
 }
