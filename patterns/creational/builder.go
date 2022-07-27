@@ -186,3 +186,38 @@ func SendEmail(action build) {
 	action(&builder)
 	sendMailImpl(&builder.email)
 }
+
+// Functional Builder
+// This approach is useful to extend the builder with build actions
+// instead of creating new builders that aggregate the current builder
+type PersonFunc struct {
+	Name, Position string
+}
+
+type personModifier func(*PersonFunc)
+
+type PersonBuilderFunc struct {
+	actions []personModifier
+}
+
+func (b *PersonBuilderFunc) Called(name string) *PersonBuilderFunc {
+	b.actions = append(b.actions, func(p *PersonFunc) {
+		p.Name = name
+	})
+	return b
+}
+
+func (b *PersonBuilderFunc) Works(position string) *PersonBuilderFunc {
+	b.actions = append(b.actions, func(p *PersonFunc) {
+		p.Position = position
+	})
+	return b
+}
+
+func (b *PersonBuilderFunc) Build() *PersonFunc {
+	p := PersonFunc{}
+	for _, action := range b.actions {
+		action(&p)
+	}
+	return &p
+}

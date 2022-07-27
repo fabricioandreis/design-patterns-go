@@ -65,7 +65,7 @@ func TestBuilderParameter(t *testing.T) {
 		})
 	})
 
-	t.Run("Should panic when email is not valid", func(t *testing.T) {
+	t.Run("Should panic when from email is not valid", func(t *testing.T) {
 		assert.Panics(t, func() {
 			creational.SendEmail(func(b *creational.EmailBuilder) {
 				b.
@@ -74,4 +74,26 @@ func TestBuilderParameter(t *testing.T) {
 			})
 		})
 	})
+
+	t.Run("Should panic when to email is not valid", func(t *testing.T) {
+		assert.Panics(t, func() {
+			creational.SendEmail(func(b *creational.EmailBuilder) {
+				b.
+					To("fabricio.andreisgmail.com").
+					Body("Hello, do you want to meet?")
+			})
+		})
+	})
+}
+
+func TestFunctionalBuilder(t *testing.T) {
+	t.Run("Should use a function builder to build a person", func(t *testing.T) {
+		builder := creational.PersonBuilderFunc{}
+
+		p := builder.Called("Fabrício").Works("Engineer").Build()
+
+		assert.Equal(t, "Fabrício", p.Name)
+		assert.Equal(t, "Engineer", p.Position)
+	})
+
 }
