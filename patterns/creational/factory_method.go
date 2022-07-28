@@ -60,7 +60,7 @@ func NewEmployeeFactory(position string, annualIncome int) func(name string) *Em
 	}
 }
 
-//
+// Struct approach
 type EmployeeFactory struct {
 	Position     string
 	AnnualIncome int
