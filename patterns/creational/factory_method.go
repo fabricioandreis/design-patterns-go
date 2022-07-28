@@ -45,3 +45,31 @@ func NewPerson(name string, age int) PersonInterface {
 	}
 	return &person{name, age}
 }
+
+// Factory Generator
+// This approach lets us create factories dependent on the settings of the resulting Products
+type Employee struct {
+	Name, Position string
+	AnnualIncome   int
+}
+
+// Functional approach
+func NewEmployeeFactory(position string, annualIncome int) func(name string) *Employee {
+	return func(name string) *Employee {
+		return &Employee{name, position, annualIncome}
+	}
+}
+
+//
+type EmployeeFactory struct {
+	Position     string
+	AnnualIncome int
+}
+
+func NewEmployeeFactoryStruct(position string, annualIncome int) *EmployeeFactory {
+	return &EmployeeFactory{position, annualIncome}
+}
+
+func (f *EmployeeFactory) Create(name string) *Employee {
+	return &Employee{name, f.Position, f.AnnualIncome}
+}
