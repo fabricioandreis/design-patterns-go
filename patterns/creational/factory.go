@@ -5,7 +5,9 @@ import "fmt"
 // Factory Method (or Virtual Constructor or Factory Function) is a creational design pattern that provides an interface for creating objects in a superclass, but allows subclasses to alter the type of objects that will be created.
 // Factory handles the wholesale creation of objects (unlike piecewise like a Builder)
 // Objects returned by a Factory are called Products
+// https://refactoring.guru/design-patterns/factory-comparison
 // https://refactoring.guru/design-patterns/factory-method
+// https://refactoring.guru/design-patterns/abstract-factory
 
 type CustomPerson struct {
 	Name     string
