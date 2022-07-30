@@ -63,4 +63,13 @@ func TestFactoryMethod(t *testing.T) {
 		assert.Equal(t, "slave", b.Position)
 		assert.Equal(t, 0, b.AnnualIncome)
 	})
+
+	t.Run("Should be able to use a Prototype Factory", func(t *testing.T) {
+		m := creational.NewEmployee(creational.Manager)
+		m.Name = "John"
+
+		assert.Equal(t, "John", m.Name)
+		assert.Equal(t, "manager", m.Position)
+		assert.Equal(t, 80000, m.AnnualIncome)
+	})
 }

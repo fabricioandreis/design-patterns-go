@@ -73,3 +73,23 @@ func NewEmployeeFactoryStruct(position string, annualIncome int) *EmployeeFactor
 func (f *EmployeeFactory) Create(name string) *Employee {
 	return &Employee{name, f.Position, f.AnnualIncome}
 }
+
+// Prototype Factory
+// Pre-configured object as a prototype and a factory function that operates on it
+type EmployeeRole int
+
+const (
+	Developer EmployeeRole = iota
+	Manager
+)
+
+func NewEmployee(role EmployeeRole) *Employee {
+	switch role {
+	case Developer:
+		return &Employee{"", "developer", 60000}
+	case Manager:
+		return &Employee{"", "manager", 80000}
+	default:
+		panic("unsupported role")
+	}
+}
