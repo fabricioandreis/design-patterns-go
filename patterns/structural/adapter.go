@@ -118,9 +118,7 @@ func (d *DefaultImage) processFromCache(line Line) bool {
 	if !ok {
 		return false
 	}
-	for _, pt := range pts {
-		d.Points = append(d.Points, pt)
-	}
+	d.Points = append(d.Points, pts...)
 	return true
 }
 
