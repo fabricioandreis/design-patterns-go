@@ -1,4 +1,4 @@
-package creational
+package structural
 
 import (
 	"crypto/md5"
