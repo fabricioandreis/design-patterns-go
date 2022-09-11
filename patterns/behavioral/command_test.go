@@ -18,4 +18,8 @@ func TestCommand(t *testing.T) {
 
 		assert.Equal(t, ba.Balance(), 50)
 	})
+
+	t.Run("Should be able to undo commands", func(t *testing.T) {
+
+	})
 }
