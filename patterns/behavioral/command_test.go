@@ -20,6 +20,15 @@ func TestCommand(t *testing.T) {
 	})
 
 	t.Run("Should be able to undo commands", func(t *testing.T) {
+		ba := behavioral.BankAccount{}
+		cmd1 := behavioral.NewBankAccountCommand(&ba, behavioral.Deposit, 100)
+		cmd2 := behavioral.NewBankAccountCommand(&ba, behavioral.Withdraw, 25)
 
+		cmd1.Call()
+		cmd2.Call()
+		cmd2.Undo()
+		cmd1.Undo()
+
+		assert.Equal(t, ba.Balance(), 0)
 	})
 }

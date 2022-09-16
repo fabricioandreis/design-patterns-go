@@ -16,16 +16,19 @@ type BankAccount struct {
 	balance int
 }
 
-func (b *BankAccount) Deposit(amount int) {
+func (b *BankAccount) Deposit(amount int) bool {
 	b.balance += amount
 	fmt.Println("Deposited", amount, "\b, balance is now", b.balance)
+	return true
 }
 
-func (b *BankAccount) Withdraw(amount int) {
+func (b *BankAccount) Withdraw(amount int) bool {
 	if b.balance-amount >= overdraftLimit {
 		b.balance -= amount
 		fmt.Println("Withdrew", amount, "\b, balance is now", b.balance)
+		return true
 	}
+	return false
 }
 
 func (b *BankAccount) Balance() int {
@@ -34,6 +37,7 @@ func (b *BankAccount) Balance() int {
 
 type Command interface {
 	Call()
+	Undo()
 }
 
 type action int
@@ -52,20 +56,33 @@ func (a action) Action() action {
 }
 
 type BankAccountCommand struct {
-	account *BankAccount
-	action  Action
-	amount  int
+	account   *BankAccount
+	action    Action
+	amount    int
+	succeeded bool
 }
 
 func NewBankAccountCommand(account *BankAccount, action Action, amount int) *BankAccountCommand {
-	return &BankAccountCommand{account, action, amount}
+	return &BankAccountCommand{account, action, amount, false}
 }
 
 func (b *BankAccountCommand) Call() {
 	switch b.action {
 	case Deposit:
-		b.account.Deposit(b.amount)
+		b.succeeded = b.account.Deposit(b.amount)
 	case Withdraw:
+		b.succeeded = b.account.Withdraw(b.amount)
+	}
+}
+
+func (b *BankAccountCommand) Undo() {
+	if !b.succeeded {
+		return
+	}
+	switch b.action {
+	case Deposit:
 		b.account.Withdraw(b.amount)
+	case Withdraw:
+		b.account.Deposit(b.amount)
 	}
 }
