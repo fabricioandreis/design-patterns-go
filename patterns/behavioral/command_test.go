@@ -58,4 +58,20 @@ func TestCommand(t *testing.T) {
 		assert.Equal(t, from.Balance(), 100)
 		assert.Equal(t, to.Balance(), 0)
 	})
+
+	t.Run("Should be able to perform commands in a functional approach", func(t *testing.T) {
+		ba := behavioral.BankAccount{}
+		var commands []func()
+		commands = append(commands, func() {
+			ba.Deposit(100)
+		})
+		commands = append(commands, func() {
+			ba.Withdraw(25)
+		})
+		for _, cmd := range commands {
+			cmd()
+		}
+
+		assert.Equal(t, ba.Balance(), 75)
+	})
 }
