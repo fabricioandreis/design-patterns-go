@@ -1,6 +1,8 @@
 package behavioral
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Command is a behavioral design pattern that turns a request into a stand-alone object that contains all information about the request.
 // This transformation lets you pass requests as a method arguments, delay or queue a request’s execution, and support undoable operations.
@@ -38,6 +40,8 @@ func (b *BankAccount) Balance() int {
 type Command interface {
 	Call()
 	Undo()
+	Succeeded() bool
+	SetSucceeded(value bool)
 }
 
 type action int
@@ -84,5 +88,69 @@ func (b *BankAccountCommand) Undo() {
 		b.account.Withdraw(b.amount)
 	case Withdraw:
 		b.account.Deposit(b.amount)
+	}
+}
+
+func (b *BankAccountCommand) Succeeded() bool {
+	return b.succeeded
+}
+
+func (b *BankAccountCommand) SetSucceeded(value bool) {
+	b.succeeded = value
+}
+
+type CompositeBankAccountCommand struct {
+	commands []Command
+}
+
+func (c *CompositeBankAccountCommand) Call() {
+	for _, c := range c.commands {
+		c.Call()
+	}
+}
+
+func (c *CompositeBankAccountCommand) Undo() {
+	for i := range c.commands {
+		c.commands[len(c.commands)-i-1].Undo()
+	}
+}
+
+func (c *CompositeBankAccountCommand) Succeeded() bool {
+	for _, c := range c.commands {
+		if !c.Succeeded() {
+			return false
+		}
+	}
+	return true
+}
+
+func (c *CompositeBankAccountCommand) SetSucceeded(value bool) {
+	for _, c := range c.commands {
+		c.SetSucceeded(value)
+	}
+}
+
+type MoneyTransferCommand struct {
+	CompositeBankAccountCommand
+	from, to *BankAccount
+	amount   int
+}
+
+func NewMoneyTransferCommand(from *BankAccount, to *BankAccount, amount int) *MoneyTransferCommand {
+	c := &MoneyTransferCommand{from: from, to: to, amount: amount}
+	c.commands = append(c.commands, NewBankAccountCommand(from, Withdraw, amount))
+	c.commands = append(c.commands, NewBankAccountCommand(to, Deposit, amount))
+	return c
+}
+
+func (m *MoneyTransferCommand) Call() {
+	ok := true
+	for _, c := range m.commands {
+		if ok {
+			c.Call()
+			ok = c.Succeeded()
+		} else {
+			c.SetSucceeded(false)
+		}
 	}
 }
