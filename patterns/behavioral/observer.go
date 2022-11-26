@@ -43,17 +43,35 @@ type Observer interface {
 type Patient struct {
 	Publisher
 	Name string
+	age  int
 }
 
-func NewPatient(name string) *Patient {
+func NewPatient(name string, age int) *Patient {
 	return &Patient{
 		Publisher: Publisher{&list.List{}},
 		Name:      name,
+		age:       age,
 	}
 }
 
 func (p *Patient) CatchACold() {
 	p.Publish(p.Name)
+}
+
+func (p *Patient) Age() int {
+	return p.age
+}
+
+func (p *Patient) SetAge(age int) {
+	if age == p.age {
+		return
+	}
+	p.age = age
+}
+
+type PropertyChange struct {
+	Name  string
+	Value any
 }
 
 type DoctorService struct {

@@ -9,7 +9,7 @@ import (
 
 func TestObserver(t *testing.T) {
 	t.Run("Should be able to observe events published", func(t *testing.T) {
-		p := behavioral.NewPatient("Fabrício")
+		p := behavioral.NewPatient("Fabrício", 35)
 		ds := &behavioral.DoctorService{}
 		p.Subscribe(ds)
 
@@ -17,5 +17,9 @@ func TestObserver(t *testing.T) {
 		lastMsg := ds.LastMessage()
 
 		assert.Equal(t, "A doctor has been called for Fabrício", lastMsg)
+	})
+
+	t.Run("Should be able to observe property changes", func(t *testing.T) {
+
 	})
 }
