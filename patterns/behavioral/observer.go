@@ -30,14 +30,14 @@ func (p *Publisher) Unsubscribe(o Observer) {
 	}
 }
 
-func (p *Publisher) Publish(data string) {
+func (p *Publisher) publish(data any) {
 	for z := p.subs.Front(); z != nil; z = z.Next() {
-		z.Value.(Observer).Notify(data)
+		z.Value.(Observer).notify(data)
 	}
 }
 
 type Observer interface {
-	Notify(data string)
+	notify(data any)
 }
 
 type Patient struct {
@@ -55,30 +55,14 @@ func NewPatient(name string, age int) *Patient {
 }
 
 func (p *Patient) CatchACold() {
-	p.Publish(p.Name)
-}
-
-func (p *Patient) Age() int {
-	return p.age
-}
-
-func (p *Patient) SetAge(age int) {
-	if age == p.age {
-		return
-	}
-	p.age = age
-}
-
-type PropertyChange struct {
-	Name  string
-	Value any
+	p.publish(p.Name)
 }
 
 type DoctorService struct {
 	Messages []string
 }
 
-func (d *DoctorService) Notify(data string) {
+func (d *DoctorService) notify(data any) {
 	msg := fmt.Sprintf("A doctor has been called for %s", data)
 	d.Messages = append(d.Messages, msg)
 	fmt.Println(msg)
@@ -89,4 +73,49 @@ func (d *DoctorService) LastMessage() string {
 		return ""
 	}
 	return d.Messages[len(d.Messages)-1]
+}
+
+type Client struct {
+	Publisher
+	age int
+}
+
+func NewClient(age int) *Client {
+	return &Client{
+		Publisher: Publisher{new(list.List)},
+		age:       age,
+	}
+}
+
+func (p *Client) Age() int {
+	return p.age
+}
+
+func (p *Client) SetAge(age int) {
+	if age == p.age {
+		return
+	}
+	p.age = age
+	p.publish(PropertyChange{"age", p.age})
+}
+
+type PropertyChange struct {
+	Name  string
+	Value any
+}
+
+type TrafficManagement struct {
+	Publisher
+	Messages []string
+}
+
+func (t *TrafficManagement) notify(data any) {
+	if pc, ok := data.(PropertyChange); ok {
+		if pc.Value.(int) >= 16 {
+			msg := "Congrats, you can drive now!"
+			t.Messages = append(t.Messages, msg)
+			fmt.Println(msg)
+			t.Unsubscribe(t) // no longer observe age of this publisher
+		}
+	}
 }

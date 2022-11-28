@@ -20,6 +20,15 @@ func TestObserver(t *testing.T) {
 	})
 
 	t.Run("Should be able to observe property changes", func(t *testing.T) {
+		p := behavioral.NewClient(50)
+		tm := &behavioral.TrafficManagement{Publisher: p.Publisher}
+		p.Subscribe(tm)
 
+		for i := 16; i <= 20; i++ {
+			p.SetAge(i)
+		}
+
+		assert.Len(t, tm.Messages, 1)
+		assert.Equal(t, "Congrats, you can drive now!", tm.Messages[0])
 	})
 }
