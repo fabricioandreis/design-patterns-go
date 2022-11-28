@@ -13,4 +13,11 @@ func TestState(t *testing.T) {
 		sw.Off()
 		sw.Off()
 	})
+
+	t.Run("Should be able to transition a states with simpler structures", func(t *testing.T) {
+		sw := behavioral.NewSwitch()
+		sw.On()
+		sw.Off()
+		sw.Off()
+	})
 }

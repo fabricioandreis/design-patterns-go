@@ -66,3 +66,58 @@ func (o *OffState) On(sw *Switch) {
 	fmt.Println("Turning light on...")
 	sw.State = NewOnState()
 }
+
+type PhoneState int
+
+const (
+	OffHook PhoneState = iota
+	Connecting
+	Connected
+	OnHold
+	OnHook
+)
+
+func (s PhoneState) String() string {
+	switch s {
+	case OffHook:
+		return "OffHook"
+	case Connecting:
+		return "Connecting"
+	case Connected:
+		return "Connected"
+	case OnHold:
+		return "OnHold"
+	case OnHook:
+		return "OnHook"
+	}
+	return "Unknown"
+}
+
+type Trigger int
+
+const (
+	CallDialed Trigger = iota
+	HungUp
+	CallConnected
+	PlacedOnHold
+	TakenOffHold
+	LeftMessage
+)
+
+func (t Trigger) String() string {
+	switch t {
+	case CallDialed:
+		return "CallDialed"
+	case HungUp:
+		return "HungUp"
+	case CallConnected:
+		return "CallConnected"
+	case PlacedOnHold:
+		return "PlacedOnHold"
+	case TakenOffHold:
+		return "TakenOffHold"
+	case LeftMessage:
+		return "LeftMessage"
+	}
+	return "Unknown"
+}
