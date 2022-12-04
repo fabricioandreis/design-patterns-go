@@ -8,6 +8,7 @@ import "fmt"
 // An object transitions from one state to another (something needs to trigger a transition)
 // A formalized construct which managers state and transitions is called a state machine.
 
+// 1: States as concrete types implementing an interface
 type Switch struct {
 	State
 }
@@ -50,7 +51,7 @@ func NewOnState() *OnState {
 
 func (o *OnState) Off(sw *Switch) {
 	fmt.Println("Turning light off...")
-	sw.State = NewOffState()
+	sw.State = NewOffState() // Double dispatch: https://en.wikipedia.org/wiki/Double_dispatch
 }
 
 type OffState struct {
@@ -67,6 +68,7 @@ func (o *OffState) On(sw *Switch) {
 	sw.State = NewOnState()
 }
 
+// 2: States as enums and transitions encoded in a map
 type PhoneState int
 
 const (
@@ -144,4 +146,47 @@ var Rules = map[PhoneState][]PhoneTriggerResult{
 		{TakenOffHold, Connected},
 		{HungUp, OnHook},
 	},
+}
+
+// 3: States as enums and transitions encoded in a switch statement
+type SystemState int
+
+const (
+	Locked SystemState = iota
+	Failed
+	Unlocked
+)
+
+type SystemSecret struct {
+	code  string
+	state SystemState
+}
+
+func NewSystemSecret(code string) *SystemSecret {
+	return &SystemSecret{code: code, state: Locked}
+}
+
+func (s *SystemSecret) Unlock(code string) bool {
+	switch s.state {
+	case Locked:
+		if s.code == code {
+			s.state = Unlocked
+			return true
+		}
+
+		s.state = Failed
+		return false
+	case Failed:
+		fmt.Println("A previous attempt to unlock was not successful, resetting the state do Locked")
+		s.state = Locked
+		return false
+	case Unlocked:
+		fmt.Println("Unlocked")
+		return true
+	}
+	return false
+}
+
+func (s *SystemSecret) State() SystemState {
+	return s.state
 }

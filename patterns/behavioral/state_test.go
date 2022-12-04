@@ -27,4 +27,24 @@ func TestState(t *testing.T) {
 		assert.Equal(t, behavioral.LeftMessage, tr.PhoneTrigger)
 		assert.Equal(t, behavioral.OnHook, state)
 	})
+
+	t.Run("Should be able to transition states with switch statement", func(t *testing.T) {
+		type testResult struct {
+			output bool
+			state  behavioral.SystemState
+		}
+		sys := behavioral.NewSystemSecret("Rafael")
+		tests := map[string]testResult{
+			"Daiana":   {false, behavioral.Failed},
+			"Fabrício": {false, behavioral.Locked},
+			"Rafael":   {true, behavioral.Unlocked},
+		}
+
+		for code, result := range tests {
+			output := sys.Unlock(code)
+
+			assert.Equal(t, result.output, output)
+			assert.Equal(t, result.state, sys.State())
+		}
+	})
 }
