@@ -93,10 +93,10 @@ func (s PhoneState) String() string {
 	return "Unknown"
 }
 
-type Trigger int
+type PhoneTrigger int
 
 const (
-	CallDialed Trigger = iota
+	CallDialed PhoneTrigger = iota
 	HungUp
 	CallConnected
 	PlacedOnHold
@@ -104,7 +104,7 @@ const (
 	LeftMessage
 )
 
-func (t Trigger) String() string {
+func (t PhoneTrigger) String() string {
 	switch t {
 	case CallDialed:
 		return "CallDialed"
@@ -120,4 +120,28 @@ func (t Trigger) String() string {
 		return "LeftMessage"
 	}
 	return "Unknown"
+}
+
+type PhoneTriggerResult struct {
+	PhoneTrigger
+	PhoneState
+}
+
+var Rules = map[PhoneState][]PhoneTriggerResult{
+	OffHook: {
+		{CallDialed, Connecting},
+	},
+	Connecting: {
+		{HungUp, OnHook},
+		{CallConnected, Connected},
+	},
+	Connected: {
+		{LeftMessage, OnHook},
+		{HungUp, OnHook},
+		{PlacedOnHold, OnHold},
+	},
+	OnHold: {
+		{TakenOffHold, Connected},
+		{HungUp, OnHook},
+	},
 }
