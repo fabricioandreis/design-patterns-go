@@ -2,6 +2,7 @@ package behavioral_test
 
 import (
 	"fmt"
+	"sync"
 	"testing"
 
 	"github.com/fabricioandreis/design-patterns-go/patterns/behavioral"
@@ -45,6 +46,23 @@ func TestChainOfResponsibility(t *testing.T) {
 		assert.Equal(t, "Goblin", goblin.Name)
 		assert.Equal(t, 1, goblin.Attack)
 		assert.Equal(t, 1, goblin.Defense)
+		fmt.Println(goblin)
+	})
+
+	t.Run("Should be able to implement chain of responsibility, mediator, observer, and CQS", func(t *testing.T) {
+		game := &behavioral.BrokerGame{sync.Map{}}
+
+		goblin := behavioral.NewBrokerCreature(game, "Goblin", 2, 2)
+		fmt.Println(goblin)
+		m := behavioral.NewBrokerDoubleAttachModifier(game, goblin)
+
+		assert.Equal(t, "Goblin", goblin.Name)
+		assert.Equal(t, 4, goblin.Attack())
+		assert.Equal(t, 2, goblin.Defense())
+		fmt.Println(goblin)
+		m.Close() // Unsubscribes the modifier from any handlers of the Attack value Query
+		assert.Equal(t, 2, goblin.Attack())
+		assert.Equal(t, 2, goblin.Defense())
 		fmt.Println(goblin)
 	})
 }
