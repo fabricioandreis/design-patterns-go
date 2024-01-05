@@ -1,7 +1,8 @@
 repo_name: fabricioandreis/design-patterns-go
-report_id: 4e248560e675cf28a76c1e5718ef7b36
+report_id: c885de8e1a2bc4827c62289527240cb9
+version: 0.1
 repo_type: Public
-timestamp: '2023-12-14T10:40:03+00:00'
+timestamp: '2024-01-05T08:43:25+00:00'
 requested_by: fabricioandreis
 provider: github
 branch: main
@@ -17,6 +18,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Languages
   image_url: https://img.stackshare.io/service/1005/O6AczwfV_400x400.png
+  detection_source_url: https://github.com/fabricioandreis/design-patterns-go
   detection_source: Repo Metadata
 - name: pgvector
   description: Open-source vector similarity search for Postgres
@@ -26,6 +28,7 @@ tools:
   category: Data Stores
   sub_category: Database Tools
   image_url: https://img.stackshare.io/service/109221/default_b888cdf5617d936aa6aacf130911906955508639.png
+  detection_source_url: https://github.com/fabricioandreis/design-patterns-go/blob/main/patterns/creational/capitals.txt
   detection_source: patterns/creational/capitals.txt
   last_updated_by: Fabrício Girardi Andreis
   last_updated_on: 2022-08-01 01:18:54.000000000 Z
@@ -37,6 +40,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Version Control System
   image_url: https://img.stackshare.io/service/1046/git.png
+  detection_source_url: https://github.com/fabricioandreis/design-patterns-go
   detection_source: Repo Metadata
 - name: Testify
   description: A toolkit with common assertions and mocks that plays nicely with the
@@ -48,6 +52,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Go Testing
   image_url: https://img.stackshare.io/service/8695/stretchr.png
+  detection_source_url: https://github.com/fabricioandreis/design-patterns-go/blob/main/go.mod
   detection_source: go.mod
   last_updated_by: Fabrício Girardi Andreis
   last_updated_on: 2022-07-24 17:37:53.000000000 Z
@@ -59,6 +64,7 @@ tools:
   category: Communications
   sub_category: Large Language Model Tools
   image_url: https://img.stackshare.io/service/48790/default_5b6c6b73f1ff3775c85d2a1ba954cb87e30cbf13.jpg
+  detection_source_url: https://github.com/fabricioandreis/design-patterns-go/blob/main/patterns/creational/capitals.txt
   detection_source: patterns/creational/capitals.txt
   last_updated_by: Fabrício Girardi Andreis
   last_updated_on: 2022-08-01 01:18:54.000000000 Z
